@@ -1,0 +1,61 @@
+/**  External CSS Stylesheet for Guess Word Game **/
+
+* {
+    box-sizing: border-box;
+  }
+
+  body {
+    background-image: url(../images/guitarbkgr.jpeg);
+    background-repeat:no-repeat;
+    background-size:cover;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 22px;
+    line-height: 150%;
+    color: #333;
+    
+  }
+  header {
+    background-image: url("/RockGifs/assets/images/Flame.jpg");
+    color: white;
+    text-shadow:5px 5px 10px white;
+    font-size: 40px;
+    text-align: center;
+    height: 60px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    color: white;
+    background-color: black;
+    margin: 20px;
+  }
+
+  #buttons-view{
+    width: 1300px;
+    background-image: url("/RockGifs/assets/images/VHdesign.jpeg");
+    background-color: darkorange;
+    border: 3px solid black;
+    text-align: left;
+    float:right;
+    position: relative;
+   
+  }
+  
+  .input_form{
+    width: 300px;
+    border-color: black;
+    border: 5px;
+    float: right;
+    margin-top: 10px;
+  }
+  
+  .container{
+    width: 800px;
+    height: 700px;
+    color: white;
+    background-color: royalblue;
+    margin-left: 300px;
+    margin-top: 100px;
+    padding: 20px;
+  }

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock 'n Roll Gifs</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/reset.css">
+  <link rel="stylesheet" href="/RockGifs/assets/css/style.css">
+</head>
+
+<body>
+
+  <header> Let's Rock and Roll!</header>
+
+  <!-- Rendered Buttons will get Dumped Here  ------------------------------------------>
+  <div id="buttons-view"></div>
+
+  <div class="input_form">
+    <form id="band-form">
+      <label for="band-input">Add a band</label>
+      <input type="text" id="band-input"><br>
+
+      <!-- Button triggers new movie to be added ---------------------------------->
+      <input id="add-band" type="submit" value="GO!">
+    </form>
+  </div>
+
+<!-- GIFS will go into this container ---------------------------------------->
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div id="gifs-appear-here"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+    // Javascript starts here =============================================================================
+
+    // Initial array of movies-----------------------------------------------------------------
+    var bands = ["Van Halen", "Babymetal",];
+
+
+    // Generic function for capturing the band name from the data-attribute ------------------------
+    function bandName() {
+      var bandName = $(this).attr("data-name");
+    };
+
+    // Function for displaying band data ----------------------------------------------------------------------------------
+    function renderButtons() {
+
+      // Deleting the bands prior to adding new bands
+      $("#buttons-view").empty();
+
+      // Looping through the array of bands ----------------------------------------------
+      for (var i = 0; i < bands.length; i++) {
+
+        // Generating buttons for each movie in the array
+        var bandbutton = $("<button>");
+        // Adding a class of bands to our button
+        bandbutton.addClass("band");
+        // Adding a data-attribute
+        bandbutton.attr("data-name", bands[i]);
+        // Providing the initial button text
+        bandbutton.text(bands[i]);
+        // Adding the button to the HTML
+        $("#buttons-view").append(bandbutton);
+
+      }
+    };
+
+    // This function handles events where one button is clicked --------------------------------------
+    $("#add-band").on("click", function (event) {
+
+      // Preventing the buttons default behavior when clicked (which is submitting a form)
+      event.preventDefault();
+
+      // Get the input from the textbox ------------------------------------------------------
+      var new_band = $("#band-input").val().trim();
+
+      // Push the movie to the array ------------------------------------------------------
+      bands.push(new_band);
+
+
+      renderButtons();
+    });
+
+    console.log(bands);
+
+    console.log(bandName);
+    $(document).on("click", ".band", function () {
+
+      // This line empties out the Gif display page ==============================================================
+      $("#gifs-appear-here").text(" ");
+
+      // Constructing a queryURL using the band name -------------------------------------------------------------
+
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + $(this).text() + "&api_key=aiS1UmnAtsc9QGNkn6StgQ7uGg84lq2n&limit=10";
+
+      // AJAX request goes here ------------------------------------------------------------------------------------
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+
+        // After data comes back from the request----------------------------------------------------------------------
+        .then(function (response) {
+          console.log(queryURL);
+          console.log(response);
+
+          // storing the data from the AJAX request in the results variable -------------------------------------
+          var results = response.data;
+
+          var rowDiv = $("<div class='row'>");
+          var bandnewDiv;
+
+
+          // Looping through each result item -----------------------------------------------------------------
+          for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag -----------------------------------------------------------
+            var bandnewDiv = $("<div class='col-md-4'></div>");
+
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: " + results[i].rating);
+
+            // Creating and storing an image tag --------------------------------------------------------------
+
+            var gifImage = results[i].images.fixed_height.url;
+            var stillImage = results[i].images.fixed_height_small_still.url;
+
+            var bandImage = $("<img>")
+              .addClass("gif")
+              .attr({
+                "src": stillImage, "type-still": stillImage,
+                "animated": gifImage, width: "200", height: "125"
+              });
+
+
+            // appending both items into bandnewDiv ----------------------------------------------------------------
+            bandnewDiv.append(p);
+            bandnewDiv.append(bandImage);
+
+
+            // Prepending the bandnewDiv to the HTML page in the "#gifs-appear-here" div
+
+            rowDiv.append(bandnewDiv);
+            $("#gifs-appear-here").prepend(rowDiv);
+          }
+        });
+    });
+
+    function convert() {
+      // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+      // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+      // Else set src to update its src attribute to what its data-still value is.
+      // alert("working");
+
+      if ($(this).attr("src") === $(this).attr("type-still")) {
+
+        $(this).attr("src", $(this).attr("animated"));
+      }
+      else {
+        $(this).attr("src", $(this).attr("type-still"));
+
+      }
+    };
+
+    renderButtons();
+
+    $(document).on("click", ".band", bandName);
+
+    $(document).on("click", "img", convert);
+
+
+  </script>
+  </div>
+</body>
+
+</html>
